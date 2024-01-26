@@ -1,6 +1,12 @@
 # THIS FILE IS FOR ROBOT MOVEMENT
+state = input()
+
+
 def go():
-    print("go")
+    if state:
+        print("go")
+    else:
+        print("wait")
 
 
 def catch():
