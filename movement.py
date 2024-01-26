@@ -10,20 +10,31 @@ def go():
 
 
 def catch():
-    print("catch")
-
+    if state:
+        print("catch")
+    else:
+        print("wait")
 
 def grab():
-    print("grab")
-
+    if state:
+        print("grab")
+    else:
+        print("wait")
 
 def drop():
-    print("drop")
-
+    if state:
+        print("drop")
+    else:
+        print("wait")
 
 def push():
-    print("push")
-
+    if state:
+        print("push")
+    else:
+        print("wait")
 
 def turn():
-    print("turn")
+    if state:
+        print("turn")
+    else:
+        print("wait")
