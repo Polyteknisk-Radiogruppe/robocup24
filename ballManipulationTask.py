@@ -66,3 +66,15 @@ except KeyboardInterrupt:
 finally:
     # Clean up GPIO settings when the program ends
     GPIO.cleanup()
+
+
+    #Camera movement decided by X and Y coordinates and robot position
+def cameraMovement(int x, int y):
+    if x < 0 and y < 0:
+        move_backward()
+        if move_backward() and turn_left():
+            turn_right()
+        elif move_backward() and turn_right():
+            turn_left()
+        else:
+            stop_robot()
