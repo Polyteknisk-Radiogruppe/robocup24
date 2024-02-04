@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Int8
+from std_msgs.msg import Float32
+from interfaces.msg import Speed
 
 class Motion(Node):
     ## This node does nothing but splits the motion between right
@@ -8,11 +9,11 @@ class Motion(Node):
     def __init__(self):
         super().__init__('motion')
 
-        self.right_pub = self.create_publisher(Int8, 'right_motor_target', 10)
-        self.left_pub = self.create_publisher(Int8, 'left_motor_target', 10)
+        self.right_pub = self.create_publisher(Float32, 'right_motor_target', 10)
+        self.left_pub = self.create_publisher(Float32, 'left_motor_target', 10)
 
         self.sub = self.create_subscription(
-                interfaces/Speed,
+                Speed,
                 'motion_speeds',
                 self.receive_target,
                 10)
@@ -24,14 +25,14 @@ class Motion(Node):
         Rvel = msg.vel - msg.steer_vel
         Lvel = msg.vel + msg.steer_vel
 
-        Rmsg = Int8()
-        Lmsg = Int8()
+        Rmsg = Float32()
+        Lmsg = Float32()
 
         Rmsg.data = Rvel
         Lmsg.data = Lvel
 
         self.right_pub.publish(Rmsg)
-        self.left_pub.bublish(Lmsg)
+        self.left_pub.publish(Lmsg)
 
         self.get_logger().info(f"Sent {Rvel} to right and {Lvel} to left")
 

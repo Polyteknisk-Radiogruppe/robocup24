@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'right_motor = motion_management.right_motor:main',
             'left_motor = motion_management.left_motor:main',
+            'motion_splitter = motion_management.motion:main',
         ],
     },
 )
