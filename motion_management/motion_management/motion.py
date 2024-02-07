@@ -1,33 +1,50 @@
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Int8
 
 class Motion(Node):
-
+    ## This node does nothing but splits the motion between right
+    ## and left wheel. It is pretty simple.
     def __init__(self):
         super().__init__('motion')
 
-        self.target_vel = 0
-        self.target.steering_vel = 0
+        self.right_pub = self.create_publisher(Int8, 'right_motor_target', 10)
+        self.left_pub = self.create_publisher(Int8, 'left_motor_target', 10)
 
-        self.right_pub = self.create_publisher(Int8, 'right_motor', 10)
-        self.left_pub = self.create_publisher(Int8, 'left_motor', 10)
-
-        self.enc_sub = self.create_subscription(
-                ,# TODO: create an interface for the encoders
-                'enc_res',
-                self.receive_encoder,
-                10)
-
-        self.target_sub = self.create_subscription(
-                Speed,
+        self.sub = self.create_subscription(
+                interfaces/Speed,
                 'motion_speeds',
                 self.receive_target,
                 10)
         self.sub
 
     def receive_target(self, msg):
-        self.target_vel = msg.vel
-        self.target_steering_vel = msg.steer_vel
+        ## These are the only two interesting lines
+        
+        Rvel = msg.vel - msg.steer_vel
+        Lvel = msg.vel + msg.steer_vel
 
-    def receive_encoder(self, msg):
-        # TODO: all this function...
+        Rmsg = Int8()
+        Lmsg = Int8()
+
+        Rmsg.data = Rvel
+        Lmsg.data = Lvel
+
+        self.right_pub.publish(Rmsg)
+        self.left_pub.bublish(Lmsg)
+
+        self.get_logger().info(f"Sent {Rvel} to right and {Lvel} to left")
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    
+    motion = Motion()
+
+    rclpy.spin(motion)
+
+    motion.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
